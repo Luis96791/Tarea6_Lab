@@ -1,12 +1,12 @@
-#include "Character.h"
+#include "character2.h"
 
-std::string toString(int number)
+std::string toString1(int number)
 {
     if (number == 0)
         return "0";
 
     if(number < 0)
-        return "-"+toString(-number);
+        return "-"+toString1(-number);
 
     std::string temp="";
     std::string returnvalue="";
@@ -20,13 +20,13 @@ std::string toString(int number)
     return returnvalue;
 }
 
-Character::Character(SDL_Renderer* renderer, int x, int y, bool flipped, string input_manager_file, string joystick_file_path)
+Character2::Character2(SDL_Renderer* renderer, int x, int y, bool flipped, string input_manager_file, string joystick_file_path)
 {
     this->x=x;
     this->y=y;
     this->flipped=flipped;
 
-    moves["idle"]=getMove(renderer,"idle",4);
+    moves["idle1"]=getMove(renderer,"idle1",4);
     moves["air_kick"]=getMove(renderer,"air_kick",3);
     moves["jump"]=getMove(renderer,"jump",8);
     moves["kick"]=getMove(renderer,"kick",6);
@@ -35,13 +35,13 @@ Character::Character(SDL_Renderer* renderer, int x, int y, bool flipped, string 
     moves["walk_backward"]=getMove(renderer,"walk_backward",5);
     moves["on_hit"]=getMove(renderer,"on_hit",5);
 
-    this->current_move = "idle";
+    this->current_move = "idle1";
     this->current_sprite = 0;
     this->current_sprite_frame = 0;
     this->input_manager=new InputManager(input_manager_file,joystick_file_path);
 }
 
-Move* Character::getMove(SDL_Renderer *renderer, string name, int sprite_amount)
+Move* Character2::getMove(SDL_Renderer *renderer, string name, int sprite_amount)
 {
     //Sprites load
     vector<Sprite*>sprites;
@@ -49,7 +49,7 @@ Move* Character::getMove(SDL_Renderer *renderer, string name, int sprite_amount)
     ifstream align_file(align_file_path.c_str());
     for(int i=1;i<=sprite_amount;i++)
     {
-        string path="assets/" + name + "/" + toString(i) + ".png";
+        string path="assets/" + name + "/" + toString1(i) + ".png";
         int align_x;
         int align_y;
         align_file>>align_x;
@@ -57,7 +57,7 @@ Move* Character::getMove(SDL_Renderer *renderer, string name, int sprite_amount)
 
         //Hitboxes
         vector<Hitbox*>hitboxes;
-        string hitbox_file_path = "assets/" + name + "/hitboxes/"+toString(i)+".txt";
+        string hitbox_file_path = "assets/" + name + "/hitboxes/"+toString1(i)+".txt";
         ifstream hitbox_file(hitbox_file_path.c_str());
         int x,y,w,h;
         while(hitbox_file>>x)
@@ -70,7 +70,7 @@ Move* Character::getMove(SDL_Renderer *renderer, string name, int sprite_amount)
 
         //Hurtboxes
         vector<Hitbox*>hurtboxes;
-        string hurtboxes_file_path = "assets/" + name + "/hurtboxes/"+toString(i)+".txt";
+        string hurtboxes_file_path = "assets/" + name + "/hurtboxes/"+toString1(i)+".txt";
         ifstream hurtboxes_file(hurtboxes_file_path.c_str());
         while(hurtboxes_file>>x)
         {
@@ -107,12 +107,12 @@ Move* Character::getMove(SDL_Renderer *renderer, string name, int sprite_amount)
     return new Move(renderer,sprites,cancels,buttons);
 }
 
-Character::~Character()
+Character2::~Character2()
 {
     //dtor
 }
 
-void Character::logic()
+void Character2::logic()
 {
     input_manager->update();
 
@@ -191,7 +191,7 @@ void Character::logic()
     {
         if(this->current_move=="walk_forward" || this->current_move=="walk_backward")
         {
-            cancel("idle");
+            cancel("idle1");
         }
         if(this->current_move=="jump"){
             cancel("punch");
@@ -204,7 +204,7 @@ void Character::logic()
         current_sprite++;
         if(current_sprite>=moves[current_move]->sprites.size())
         {
-            current_move= "idle";
+            current_move= "idle1";
             current_sprite=0;
         }
         current_sprite_frame=0;
@@ -227,23 +227,24 @@ void Character::logic()
     }
 }
 
-void Character::draw()
+void Character2::draw()
 {
     moves[current_move]->draw(current_sprite,x,y,flipped);
 }
 
-vector<Hitbox*> Character::getHitboxes()
+vector<Hitbox*> Character2::getHitboxes()
 {
     return moves[current_move]->sprites[current_sprite]->hitboxes;
 }
 
-vector<Hitbox*> Character::getHurtboxes()
+vector<Hitbox*> Character2::getHurtboxes()
 {
     return moves[current_move]->sprites[current_sprite]->hurtboxes;
 }
 
-void Character::cancel(string new_move)
+void Character2::cancel(string new_move)
 {
     this->current_move = new_move;
     this->current_sprite = 0;
 }
+

@@ -42,7 +42,7 @@ int characters(string backg){
     background = IMG_LoadTexture(renderer, backg.c_str());
     rect_background.x = 0;
     rect_background.y = 0;
-    rect_background.w = 1200;
+    rect_background.w = 1400;
     rect_background.h = 600;
 
 
@@ -52,6 +52,7 @@ int characters(string backg){
     map<DeviceButton*,Button*>input_map;
 
     int frame=0;
+    int  ultima_pos = character->x=200;
 
     double last_fame_ticks=SDL_GetTicks();
 
@@ -61,12 +62,35 @@ int characters(string backg){
     while(true)
     {
         frame++;
-//        while(SDL_PollEvent(&Event))
-//        {
-//            if(Event.type == SDL_QUIT)
-//            {
-//                return 0;
-//            }
+        cout<<ultima_pos<<endl;
+        if(character->x>ultima_pos){
+            rect_background.x--;
+            ultima_pos = character->x;
+        }else if(character->x<ultima_pos){
+            rect_background.x++;
+            ultima_pos = character->x;
+        }
+
+        if(character->x<200){
+            character->x = 200;
+            rect_background.x = 0;
+        }
+
+        if(character2->x>1000){
+            rect_background.w;
+        }
+
+        while(SDL_PollEvent(&Event))
+        {
+            if(Event.type == SDL_QUIT)
+            {
+                exit(0);
+            }
+            if(Event.type == SDL_KEYDOWN)
+                if(Event.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    exit(0);
+                }
 //            if(Event.type == SDL_KEYDOWN)
 //            {
 //                if(Event.key.keysym.sym == SDLK_d)
@@ -74,7 +98,7 @@ int characters(string backg){
 //                if(Event.key.keysym.sym == SDLK_a)
 //                    rect_character.x--;
 //            }
-//        }
+        }
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
@@ -181,19 +205,19 @@ int characters(string backg){
             SDL_Delay(sleep_time);
         last_fame_ticks=SDL_GetTicks();
 
-        if(character->x<=0)
-        {
-            cout<<"Jugador 2 ha ganado"<<endl;
-            character->x=200;
-            character2->x=800;
-        }
-
-        if(character2->x>=1000)
-        {
-            cout<<"Jugador 1 ha ganado"<<endl;
-            character->x=200;
-            character2->x=800;
-        }
+//        if(character->x<=0)
+//        {
+//            cout<<"Jugador 2 ha ganado"<<endl;
+//            character->x=200;
+//            character2->x=800;
+//        }
+//
+//        if(character2->x>=1000)
+//        {
+//            cout<<"Jugador 1 ha ganado"<<endl;
+//            character->x=200;
+//            character2->x=800;
+//        }
 
 
 //        drawRect(renderer,10,30,50,100,
@@ -203,6 +227,88 @@ int characters(string backg){
     }
 
 	return 0;
+}
+
+void menu1()
+{
+
+    if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
+    {
+
+    }
+
+    if((window = SDL_CreateWindow("Personajes", 100, 100, 1200/*WIDTH*/, 600/*HEIGHT*/, SDL_WINDOW_RESIZABLE | SDL_RENDERER_PRESENTVSYNC)) == NULL)
+    {
+
+    }
+
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED );
+    if (renderer == NULL)
+    {
+        std::cout << SDL_GetError() << std::endl;
+
+    }
+
+    int opc = 1;
+    SDL_Texture *menu[3];
+    SDL_Texture *image;
+    menu[0] = IMG_LoadTexture(renderer,"personaje1.png");
+    menu[1] = IMG_LoadTexture(renderer,"personaje2.png");
+    menu[2] = IMG_LoadTexture(renderer,"personaje3.png");
+
+    SDL_Rect menu_rect;
+    menu_rect.x = 0;
+    menu_rect.y = 0;
+    menu_rect.h= 600;
+    menu_rect.w = 1200;
+
+    while(true)
+    {
+        while(SDL_PollEvent(&Event))
+        {
+            if(Event.type == SDL_QUIT)
+            {
+                exit(0);
+            }
+            if(Event.type == SDL_KEYDOWN)
+            {
+
+//                if(Event.key.keysym.sym == SDLK_ESCAPE)
+//                {
+//                    exit(0);
+//                }
+                if(Event.key.keysym.sym == SDLK_RIGHT)
+                {
+                    opc++;
+                    if(opc > 3)
+                        opc = 3;
+                }
+                if(Event.key.keysym.sym == SDLK_LEFT)
+                {
+                    opc--;
+                    if(opc < 1)
+                        opc = 1;
+                }
+                if(Event.key.keysym.sym == SDLK_RETURN)
+                {
+                    switch(opc)
+                    {
+                        case 1:
+                        break;
+                        case 2:
+
+                        break;
+                        case 3:
+
+                        break;
+                    }
+                }
+            }
+        }
+        SDL_RenderCopy(renderer,menu[opc-1],NULL,&menu_rect);
+
+        SDL_RenderPresent(renderer);
+    }
 }
 
 void menu()
@@ -249,10 +355,10 @@ void menu()
             if(Event.type == SDL_KEYDOWN)
             {
 
-                if(Event.key.keysym.sym == SDLK_ESCAPE)
-                {
-                    exit(0);
-                }
+//                if(Event.key.keysym.sym == SDLK_ESCAPE)
+//                {
+//                    exit(0);
+//                }
                 if(Event.key.keysym.sym == SDLK_RIGHT)
                 {
                     opc++;
@@ -286,10 +392,8 @@ void menu()
 
         SDL_RenderPresent(renderer);
     }
+
 }
-
-
-
 
 int main( int argc, char* args[] )
 {

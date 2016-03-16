@@ -9,6 +9,9 @@ InputManager::InputManager(string file_path, string joystick_file_path)
     possible_buttons.push_back('a');
     possible_buttons.push_back('b');
     possible_buttons.push_back('c');
+    possible_buttons.push_back('j');
+    possible_buttons.push_back('w');
+    possible_buttons.push_back('z');
 
     ifstream in(file_path.c_str());
     char input;

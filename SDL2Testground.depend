@@ -644,7 +644,7 @@
 
 1457981173 /home/luis/Escritorio/GitHub/FighterDragon_Tarea6/Button.h
 
-1457982503 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/Character.cpp
+1458144006 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/Character.cpp
 	"Character.h"
 
 1457981173 /home/luis/Escritorio/GitHub/FighterDragon_Tarea6/Character.h
@@ -694,10 +694,10 @@
 1457981173 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/Hitbox.cpp
 	"Hitbox.h"
 
-1457981173 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/InputManager.cpp
+1458076568 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/InputManager.cpp
 	"InputManager.h"
 
-1457991354 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/main.cpp
+1458146817 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/main.cpp
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	<iostream>
@@ -715,4 +715,14 @@
 
 1457981173 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/Utility.cpp
 	"Utility.h"
+
+1458145299 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/character2.cpp
+	"character2.h"
+
+1458145031 /home/luis/Escritorio/GitHub/FighterDragon_Tarea6/character2.h
+	<iostream>
+	<map>
+	<fstream>
+	"Move.h"
+	"InputManager.h"
 

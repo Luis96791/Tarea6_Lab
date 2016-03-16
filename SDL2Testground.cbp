@@ -48,6 +48,8 @@
 		<Unit filename="Sprite.h" />
 		<Unit filename="Utility.cpp" />
 		<Unit filename="Utility.h" />
+		<Unit filename="character2.cpp" />
+		<Unit filename="character2.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
