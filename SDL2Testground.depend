@@ -697,7 +697,7 @@
 1458076568 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/InputManager.cpp
 	"InputManager.h"
 
-1458146817 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/main.cpp
+1458163357 source:/home/luis/Escritorio/GitHub/FighterDragon_Tarea6/main.cpp
 	<SDL2/SDL.h>
 	<SDL2/SDL_image.h>
 	<iostream>

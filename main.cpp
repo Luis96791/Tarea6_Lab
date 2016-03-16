@@ -9,14 +9,38 @@
 
 using namespace std;
 
+string toString3(int number)
+{
+    if (number == 0)
+        return "0";
+
+    if(number < 0)
+        return "-"+toString3(-number);
+
+    string temp="";
+    string returnvalue="";
+    while (number>0)
+    {
+        temp+=number%10+48;
+        number/=10;
+    }
+    for (int i=0;i<(int)temp.length();i++)
+        returnvalue+=temp[temp.length()-i-1];
+    return returnvalue;
+}
+
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Event Event;
-SDL_Texture *background, *escenario;
-SDL_Rect rect_background,rect_character;
+SDL_Texture *background, *escenario, *bar, *bar2;
+SDL_Rect rect_background,rect_character, rect_bar, rect_bar2;
 
 
 int respuesta = 0;
+
+void bars(int char_uno, int char_dos){
+
+}
 
 int characters(string backg){
 
@@ -45,21 +69,36 @@ int characters(string backg){
     rect_background.w = 1400;
     rect_background.h = 600;
 
+    bar = IMG_LoadTexture(renderer, "bars/bar_full.png");
+    rect_bar.x = 20;
+    rect_bar.y = 20;
+    rect_bar.w = 140;
+    rect_bar.h = 40;
+
+    bar2 = IMG_LoadTexture(renderer, "bars/bar_full.png");
+    rect_bar2.x = 1040;
+    rect_bar2.y = 20;
+    rect_bar2.w = 140;
+    rect_bar2.h = 40;
 
     Character* character = new Character(renderer,200,550,false,"assets/inputs_player1.txt","assets/joystick_player1.txt");
     Character* character2 = new Character(renderer,800,550,true,"assets/inputs_player2.txt","assets/joystick_player2.txt");
 
     map<DeviceButton*,Button*>input_map;
 
-    int frame=0;
+    int frame=0, i =0;
     int  ultima_pos = character->x=200;
+
+    int punch1=0, punch2=0;
 
     double last_fame_ticks=SDL_GetTicks();
 
     SDL_JoystickOpen( 0 );
 
+    bool parar = true;
+
     //Main Loop
-    while(true)
+    while(parar)
     {
         frame++;
         cout<<ultima_pos<<endl;
@@ -105,6 +144,8 @@ int characters(string backg){
 
 
         SDL_RenderCopy(renderer, background, NULL, &rect_background);
+        SDL_RenderCopy(renderer, bar, NULL, &rect_bar);
+        SDL_RenderCopy(renderer, bar2, NULL, &rect_bar2);
 
         character->logic();
         character->draw();
@@ -145,13 +186,29 @@ int characters(string backg){
                 if(collides(rect1,rect2))
                 {
                     cout<<"Jugador 1 conecto un golpe"<<endl;
+                    punch2++;
                     character2->cancel("on_hit");
                 }else
                 {
                     //cout<<"No Colision!"<<endl;
                 }
             }
-        }
+
+            if(punch2>0 && punch2<14){
+                string get_bar = "bars/bar_"+toString3(punch2)+".png";
+                bar2 = IMG_LoadTexture(renderer, get_bar.c_str());
+            }else if(punch2 >= 14){
+                bar2 = IMG_LoadTexture(renderer, "bars/message1.png");
+                rect_bar2.x = 400;
+                rect_bar2.y = 200;
+                rect_bar2.w = 350;
+                rect_bar2.h = 180;
+                SDL_RenderCopy(renderer, bar2, NULL, &rect_bar2);
+                parar = false;
+            }
+    }
+
+
 
         for(int i=0;i<char1_hurtboxes.size();i++)
         {
@@ -180,11 +237,24 @@ int characters(string backg){
                 if(collides(rect1,rect2))
                 {
                     cout<<"Jugador 2 conecto un golpe"<<endl;
+                    punch1++;
                     character->cancel("on_hit");
                 }else
                 {
                     //cout<<"No Colision!"<<endl;
                 }
+            }
+            if(punch1>0 && punch1<14){
+                string get_bar = "bars/bar_"+toString3(punch1)+".png";
+                bar = IMG_LoadTexture(renderer, get_bar.c_str());
+            }else if(punch1 >= 14){
+                bar = IMG_LoadTexture(renderer, "bars/message2.png");
+                rect_bar.x = 400;
+                rect_bar.y = 200;
+                rect_bar.w = 350;
+                rect_bar.h = 180;
+                SDL_RenderCopy(renderer, bar, NULL, &rect_bar);
+                parar = false;
             }
         }
 
@@ -309,6 +379,7 @@ void menu1()
 
         SDL_RenderPresent(renderer);
     }
+
 }
 
 void menu()
