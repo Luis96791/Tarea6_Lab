@@ -6,6 +6,7 @@
 #include "Button.h"
 #include "DeviceButton.h"
 #include "InputManager.h"
+#include <SDL2/SDL_mixer.h>
 
 using namespace std;
 
@@ -34,15 +35,39 @@ SDL_Renderer* renderer;
 SDL_Event Event;
 SDL_Texture *background, *escenario, *bar, *bar2;
 SDL_Rect rect_background,rect_character, rect_bar, rect_bar2;
-
+Mix_Chunk *walk, *punch;
+Mix_Music *escenario1_music, *escenario2_music, *escenario3_music;
 
 int respuesta = 0;
+int terminar = 0;
 
-void bars(int char_uno, int char_dos){
-
-}
 
 int characters(string backg){
+
+
+
+    atexit(SDL_Quit);
+
+
+
+    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) { //iniciamos la sdl y el audio
+        exit (-1);
+    }
+
+    if (Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 4096) < 0){
+        exit(-1);
+    }
+
+    atexit(Mix_CloseAudio);
+
+// cargamos los sonidos
+
+//musica = Mix_LoadMUS(""); //no creo q necesite explicacion
+    escenario1_music = Mix_LoadMUS("JapaneseMansion.mp3");
+    escenario2_music = Mix_LoadMUS("ArabianDance.mp3");
+    escenario3_music = Mix_LoadMUS("ThePenthouse.mp3");
+
+    punch = Mix_LoadWAV("punch.wav");
 
 //Init SDL
     if(SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_JOYSTICK) < 0)
@@ -83,6 +108,18 @@ int characters(string backg){
 
     Character* character = new Character(renderer,200,550,false,"assets/inputs_player1.txt","assets/joystick_player1.txt");
     Character* character2 = new Character(renderer,800,550,true,"assets/inputs_player2.txt","assets/joystick_player2.txt");
+
+    if(backg == "escenario1.png"){
+        Mix_PlayMusic(escenario1_music, -1);
+    }
+
+    if(backg == "escenario2.png"){
+        Mix_PlayMusic(escenario2_music, -1);
+    }
+
+    if(backg == "escenario3.png"){
+        Mix_PlayMusic(escenario3_music, -1);
+    }
 
     map<DeviceButton*,Button*>input_map;
 
@@ -130,13 +167,6 @@ int characters(string backg){
                 {
                     exit(0);
                 }
-//            if(Event.type == SDL_KEYDOWN)
-//            {
-//                if(Event.key.keysym.sym == SDLK_d)
-//                    rect_character.x++;
-//                if(Event.key.keysym.sym == SDLK_a)
-//                    rect_character.x--;
-//            }
         }
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -185,6 +215,7 @@ int characters(string backg){
                 rect2.y=-rect2.y+character2->y;
                 if(collides(rect1,rect2))
                 {
+                    Mix_PlayChannel(-1,punch,0);
                     cout<<"Jugador 1 conecto un golpe"<<endl;
                     punch2++;
                     character2->cancel("on_hit");
@@ -236,6 +267,7 @@ int characters(string backg){
                 rect2.y=-rect2.y+character2->y;
                 if(collides(rect1,rect2))
                 {
+                    Mix_PlayChannel(-1,punch,0);
                     cout<<"Jugador 2 conecto un golpe"<<endl;
                     punch1++;
                     character->cancel("on_hit");
@@ -255,6 +287,7 @@ int characters(string backg){
                 rect_bar.h = 180;
                 SDL_RenderCopy(renderer, bar, NULL, &rect_bar);
                 parar = false;
+
             }
         }
 
@@ -299,88 +332,6 @@ int characters(string backg){
 	return 0;
 }
 
-void menu1()
-{
-
-    if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
-    {
-
-    }
-
-    if((window = SDL_CreateWindow("Personajes", 100, 100, 1200/*WIDTH*/, 600/*HEIGHT*/, SDL_WINDOW_RESIZABLE | SDL_RENDERER_PRESENTVSYNC)) == NULL)
-    {
-
-    }
-
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED );
-    if (renderer == NULL)
-    {
-        std::cout << SDL_GetError() << std::endl;
-
-    }
-
-    int opc = 1;
-    SDL_Texture *menu[3];
-    SDL_Texture *image;
-    menu[0] = IMG_LoadTexture(renderer,"personaje1.png");
-    menu[1] = IMG_LoadTexture(renderer,"personaje2.png");
-    menu[2] = IMG_LoadTexture(renderer,"personaje3.png");
-
-    SDL_Rect menu_rect;
-    menu_rect.x = 0;
-    menu_rect.y = 0;
-    menu_rect.h= 600;
-    menu_rect.w = 1200;
-
-    while(true)
-    {
-        while(SDL_PollEvent(&Event))
-        {
-            if(Event.type == SDL_QUIT)
-            {
-                exit(0);
-            }
-            if(Event.type == SDL_KEYDOWN)
-            {
-
-//                if(Event.key.keysym.sym == SDLK_ESCAPE)
-//                {
-//                    exit(0);
-//                }
-                if(Event.key.keysym.sym == SDLK_RIGHT)
-                {
-                    opc++;
-                    if(opc > 3)
-                        opc = 3;
-                }
-                if(Event.key.keysym.sym == SDLK_LEFT)
-                {
-                    opc--;
-                    if(opc < 1)
-                        opc = 1;
-                }
-                if(Event.key.keysym.sym == SDLK_RETURN)
-                {
-                    switch(opc)
-                    {
-                        case 1:
-                        break;
-                        case 2:
-
-                        break;
-                        case 3:
-
-                        break;
-                    }
-                }
-            }
-        }
-        SDL_RenderCopy(renderer,menu[opc-1],NULL,&menu_rect);
-
-        SDL_RenderPresent(renderer);
-    }
-
-}
 
 void menu()
 {
@@ -447,6 +398,7 @@ void menu()
                     switch(opc)
                     {
                         case 1:
+
                             characters("escenario1.png");
                         break;
                         case 2:

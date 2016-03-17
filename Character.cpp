@@ -1,4 +1,5 @@
 #include "Character.h"
+#include <SDL2/SDL_mixer.h>
 
 std::string toString(int number)
 {
@@ -19,6 +20,8 @@ std::string toString(int number)
         returnvalue+=temp[temp.length()-i-1];
     return returnvalue;
 }
+
+
 
 Character::Character(SDL_Renderer* renderer, int x, int y, bool flipped, string input_manager_file, string joystick_file_path)
 {
@@ -114,6 +117,16 @@ Character::~Character()
 
 void Character::logic()
 {
+    Mix_Chunk *walk;
+    if (Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 4096) < 0)
+    // iniciamos el audio a la frecuencia 22hz, 16 bits, 2 canales y un buffer de 4096 (segun el //sonido poner mas o menos cantidad de buffer)
+    {
+        exit(-1);
+    }
+
+    atexit(Mix_CloseAudio);
+    walk = Mix_LoadWAV("walk.wav");
+
     input_manager->update();
 
     if(this->current_move=="on_hit")
@@ -147,6 +160,7 @@ void Character::logic()
     {
         if(moves["walk_forward"]->canCancel(this->current_move))
         {
+            Mix_PlayChannel(-1,walk,0);
             if(this->current_move!="walk_forward")
             {
                 this->current_sprite = 0;
@@ -158,6 +172,7 @@ void Character::logic()
     {
         if(moves["walk_backward"]->canCancel(this->current_move))
         {
+            Mix_PlayChannel(-1,walk,0);
             if(this->current_move!="walk_backward")
             {
                 this->current_sprite = 0;
