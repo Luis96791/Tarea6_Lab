@@ -35,7 +35,7 @@ SDL_Renderer* renderer;
 SDL_Event Event;
 SDL_Texture *background, *escenario, *bar, *bar2;
 SDL_Rect rect_background,rect_character, rect_bar, rect_bar2;
-Mix_Chunk *walk, *punch;
+Mix_Chunk *walk, *punch, *button;
 Mix_Music *escenario1_music, *escenario2_music, *escenario3_music;
 
 int respuesta = 0;
@@ -152,9 +152,9 @@ int characters(string backg){
             rect_background.x = 0;
         }
 
-        if(character2->x>1000){
-            rect_background.w;
-        }
+//        if(character2->x>400){
+//            rect_background.w = 600;
+//        }
 
         while(SDL_PollEvent(&Event))
         {
@@ -341,10 +341,16 @@ void menu()
 
     }
 
+     if (Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 4096) < 0){
+        exit(-1);
+    }
+
     if((window = SDL_CreateWindow("Escenarios", 100, 100, 1200/*WIDTH*/, 600/*HEIGHT*/, SDL_WINDOW_RESIZABLE | SDL_RENDERER_PRESENTVSYNC)) == NULL)
     {
 
     }
+
+    button = Mix_LoadWAV("boton.wav");
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED );
     if (renderer == NULL)
@@ -376,6 +382,9 @@ void menu()
             }
             if(Event.type == SDL_KEYDOWN)
             {
+
+
+            Mix_PlayChannel(-1,button,0);
 
 //                if(Event.key.keysym.sym == SDLK_ESCAPE)
 //                {
